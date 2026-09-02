@@ -1,12 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+// The storefront runs in standalone demo mode when no integration is selected.
+// Keeping this narrow adapter preserves the store API without initializing a client.
+const unavailable = () => { throw new Error('Supabase integration is not enabled in demo mode.'); };
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fkpknwwmicphlgfiomtj.supabase.co';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_qMwXUv3qA4HdOveelu-lpg_SgpHSgWi';
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
-
-// For admin operations that require bypassing RLS
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-);
+export const supabase = { from: unavailable } as any;
+export const supabaseAdmin = { from: unavailable } as any;
