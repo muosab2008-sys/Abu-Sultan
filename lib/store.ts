@@ -70,37 +70,17 @@ export const useAppStore = create<AppState>((set, get) => ({
   setIsMock: (isMock) => set({ isMock }),
 
   fetchInitialData: async () => {
-    try {
-      // Try fetching from Supabase
-      const { data: pData, error: pError } = await supabase.from('products').select('*');
-      if (pError) throw pError;
-      
-      const { data: sData } = await supabase.from('site_settings').select('*').single();
-      const { data: iData } = await supabase.from('digital_inventory').select('*');
-      const { data: tData } = await supabase.from('topup_requests').select('*');
-      const { data: oData } = await supabase.from('orders').select('*');
-
-      set({
-        products: pData || [],
-        settings: sData || mockSettings,
-        inventory: iData || [],
-        topupRequests: tData || [],
-        orders: oData || [],
-        isMock: false
-      });
-    } catch (e: any) {
-      console.warn("Supabase fetch failed, using mock data.", e instanceof Error ? e.message : String(e));
-      set({
-        products: mockProducts,
-        settings: mockSettings,
-        inventory: mockInventory,
-        topupRequests: [
-          { id: 'req1', user_id: 'cust1', amount: 50, receipt_image: 'https://picsum.photos/200', status: 'pending', created_at: new Date().toISOString() }
-        ],
-        orders: [],
-        isMock: true
-      });
-    }
+    // This build intentionally runs as a self-contained demo when no integration is connected.
+    set({
+      products: mockProducts,
+      settings: mockSettings,
+      inventory: mockInventory,
+      topupRequests: [
+        { id: 'req1', user_id: 'cust1', amount: 50, receipt_image: 'https://picsum.photos/seed/receipt/200/140', status: 'pending', created_at: new Date().toISOString() }
+      ],
+      orders: [],
+      isMock: true
+    });
   },
 
   loginAsCustomer: () => set({ user: mockCustomer }),
